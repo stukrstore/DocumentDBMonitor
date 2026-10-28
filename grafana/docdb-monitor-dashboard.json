@@ -1,0 +1,2684 @@
+{
+  "uid": "docdb-monitor",
+  "title": "DocDB Monitor (AMW)",
+  "tags": [
+    "docdb",
+    "prometheus",
+    "azure-monitor"
+  ],
+  "timezone": "browser",
+  "refresh": "10s",
+  "schemaVersion": 39,
+  "graphTooltip": 1,
+  "time": {
+    "from": "now-30m",
+    "to": "now"
+  },
+  "templating": {
+    "list": [
+      {
+        "name": "cluster",
+        "label": "Cluster",
+        "type": "query",
+        "datasource": {
+          "type": "grafana-azureprometheus-datasource",
+          "uid": "docdb-amw"
+        },
+        "query": {
+          "query": "label_values(docdb_up, cluster)",
+          "refId": "q"
+        },
+        "definition": "label_values(docdb_up, cluster)",
+        "refresh": 2,
+        "includeAll": true,
+        "multi": true,
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        }
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "row",
+      "title": "Overview",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "Status",
+      "datasource": {
+        "type": "grafana-azureprometheus-datasource",
+        "uid": "docdb-amw"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "docdb_up{cluster=~\"$cluster\"}",
+          "legendFormat": "{{cluster}}",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "DOWN",
+                  "color": "red"
+                },
+                "1": {
+                  "text": "UP",
+                  "color": "green"
+                }
+              }
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "textMode": "value_and_name",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "values": false
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 1
+      }
+    },
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "Active ops",
+      "datasource": {
+        "type": "grafana-azureprometheus-datasource",
+        "uid": "docdb-amw"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "docdb_currentop_active{cluster=~\"$cluster\"}",
+          "legendFormat": "{{cluster}}",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "textMode": "value_and_name",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "values": false
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 1
+      }
+    },
+    {
+      "id": 4,
+      "type": "stat",
+      "title": "Long-running ops",
+      "datasource": {
+        "type": "grafana-azureprometheus-datasource",
+        "uid": "docdb-amw"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "docdb_currentop_long_running{cluster=~\"$cluster\"}",
+          "legendFormat": "{{cluster}}",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 1
+              },
+              {
+                "color": "red",
+                "value": 5
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "textMode": "value_and_name",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "values": false
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 1
+      }
+    },
+    {
+      "id": 5,
+      "type": "stat",
+      "title": "Longest op",
+      "datasource": {
+        "type": "grafana-azureprometheus-datasource",
+        "uid": "docdb-amw"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "docdb_currentop_max_secs_running{cluster=~\"$cluster\"}",
+          "legendFormat": "{{cluster}}",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "textMode": "value_and_name",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "values": false
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 1
+      }
+    },
+    {
+      "id": 6,
+      "type": "stat",
+      "title": "Scrape duration",
+      "datasource": {
+        "type": "grafana-azureprometheus-datasource",
+        "uid": "docdb-amw"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "docdb_scrape_duration_seconds{cluster=~\"$cluster\"}",
+          "legendFormat": "{{cluster}}",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "textMode": "value_and_name",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "values": false
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 1
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Total data size",
+      "datasource": {
+        "type": "grafana-azureprometheus-datasource",
+        "uid": "docdb-amw"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(docdb_db_data_size_bytes{cluster=~\"$cluster\"})",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "value",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "values": false
+        }
+      },
+      "id": 7,
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 1
+      }
+    },
+    {
+      "id": 8,
+      "type": "row",
+      "title": "Operations & latency",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 5
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Requests by operation (count)",
+      "datasource": "Azure Monitor",
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "Azure Monitor",
+          "subscription": "<SUBSCRIPTION_ID>",
+          "azureMonitor": {
+            "aggregation": "Count",
+            "metricName": "MongoRequestDurationMs",
+            "metricNamespace": "microsoft.documentdb/mongoclusters",
+            "timeGrain": "auto",
+            "region": "<AZURE_REGION>",
+            "alias": "{{ dimensionvalue }}",
+            "dimensionFilters": [
+              {
+                "dimension": "Operation",
+                "operator": "eq",
+                "filters": [
+                  "*"
+                ]
+              }
+            ],
+            "resources": [
+              {
+                "subscription": "<SUBSCRIPTION_ID>",
+                "resourceGroup": "<CLUSTER_RESOURCE_GROUP>",
+                "resourceName": "<CLUSTER_NAME>",
+                "metricNamespace": "Microsoft.DocumentDB/mongoClusters",
+                "region": "<AZURE_REGION>"
+              }
+            ]
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": true
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "id": 9,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 6
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Requests by status class",
+      "datasource": "Azure Monitor",
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "Azure Monitor",
+          "subscription": "<SUBSCRIPTION_ID>",
+          "azureMonitor": {
+            "aggregation": "Count",
+            "metricName": "MongoRequestDurationMs",
+            "metricNamespace": "microsoft.documentdb/mongoclusters",
+            "timeGrain": "auto",
+            "region": "<AZURE_REGION>",
+            "alias": "{{ dimensionvalue }}",
+            "dimensionFilters": [
+              {
+                "dimension": "StatusCodeClass",
+                "operator": "eq",
+                "filters": [
+                  "*"
+                ]
+              }
+            ],
+            "resources": [
+              {
+                "subscription": "<SUBSCRIPTION_ID>",
+                "resourceGroup": "<CLUSTER_RESOURCE_GROUP>",
+                "resourceName": "<CLUSTER_NAME>",
+                "metricNamespace": "Microsoft.DocumentDB/mongoClusters",
+                "region": "<AZURE_REGION>"
+              }
+            ]
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": true
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "id": 10,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 6
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Latency by operation - avg (ms)",
+      "datasource": "Azure Monitor",
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "Azure Monitor",
+          "subscription": "<SUBSCRIPTION_ID>",
+          "azureMonitor": {
+            "aggregation": "Average",
+            "metricName": "MongoRequestDurationMs",
+            "metricNamespace": "microsoft.documentdb/mongoclusters",
+            "timeGrain": "auto",
+            "region": "<AZURE_REGION>",
+            "alias": "{{ dimensionvalue }}",
+            "dimensionFilters": [
+              {
+                "dimension": "Operation",
+                "operator": "eq",
+                "filters": [
+                  "*"
+                ]
+              }
+            ],
+            "resources": [
+              {
+                "subscription": "<SUBSCRIPTION_ID>",
+                "resourceGroup": "<CLUSTER_RESOURCE_GROUP>",
+                "resourceName": "<CLUSTER_NAME>",
+                "metricNamespace": "Microsoft.DocumentDB/mongoClusters",
+                "region": "<AZURE_REGION>"
+              }
+            ]
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": true
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "id": 11,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 14
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Latency by operation - max (ms)",
+      "datasource": "Azure Monitor",
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "Azure Monitor",
+          "subscription": "<SUBSCRIPTION_ID>",
+          "azureMonitor": {
+            "aggregation": "Maximum",
+            "metricName": "MongoRequestDurationMs",
+            "metricNamespace": "microsoft.documentdb/mongoclusters",
+            "timeGrain": "auto",
+            "region": "<AZURE_REGION>",
+            "alias": "{{ dimensionvalue }}",
+            "dimensionFilters": [
+              {
+                "dimension": "Operation",
+                "operator": "eq",
+                "filters": [
+                  "*"
+                ]
+              }
+            ],
+            "resources": [
+              {
+                "subscription": "<SUBSCRIPTION_ID>",
+                "resourceGroup": "<CLUSTER_RESOURCE_GROUP>",
+                "resourceName": "<CLUSTER_NAME>",
+                "metricNamespace": "Microsoft.DocumentDB/mongoClusters",
+                "region": "<AZURE_REGION>"
+              }
+            ]
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": true
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "id": 12,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 14
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Requests by collection (count)",
+      "datasource": "Azure Monitor",
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "Azure Monitor",
+          "subscription": "<SUBSCRIPTION_ID>",
+          "azureMonitor": {
+            "aggregation": "Count",
+            "metricName": "MongoRequestDurationMs",
+            "metricNamespace": "microsoft.documentdb/mongoclusters",
+            "timeGrain": "auto",
+            "region": "<AZURE_REGION>",
+            "alias": "{{ dimensionvalue }}",
+            "dimensionFilters": [
+              {
+                "dimension": "CollectionName",
+                "operator": "eq",
+                "filters": [
+                  "*"
+                ]
+              }
+            ],
+            "resources": [
+              {
+                "subscription": "<SUBSCRIPTION_ID>",
+                "resourceGroup": "<CLUSTER_RESOURCE_GROUP>",
+                "resourceName": "<CLUSTER_NAME>",
+                "metricNamespace": "Microsoft.DocumentDB/mongoClusters",
+                "region": "<AZURE_REGION>"
+              }
+            ]
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": true
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "id": 13,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 22
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Latency by collection - avg (ms)",
+      "datasource": "Azure Monitor",
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "Azure Monitor",
+          "subscription": "<SUBSCRIPTION_ID>",
+          "azureMonitor": {
+            "aggregation": "Average",
+            "metricName": "MongoRequestDurationMs",
+            "metricNamespace": "microsoft.documentdb/mongoclusters",
+            "timeGrain": "auto",
+            "region": "<AZURE_REGION>",
+            "alias": "{{ dimensionvalue }}",
+            "dimensionFilters": [
+              {
+                "dimension": "CollectionName",
+                "operator": "eq",
+                "filters": [
+                  "*"
+                ]
+              }
+            ],
+            "resources": [
+              {
+                "subscription": "<SUBSCRIPTION_ID>",
+                "resourceGroup": "<CLUSTER_RESOURCE_GROUP>",
+                "resourceName": "<CLUSTER_NAME>",
+                "metricNamespace": "Microsoft.DocumentDB/mongoClusters",
+                "region": "<AZURE_REGION>"
+              }
+            ]
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": true
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "id": 14,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 22
+      }
+    },
+    {
+      "id": 15,
+      "type": "row",
+      "title": "Active operations (currentOp)",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 30
+      }
+    },
+    {
+      "id": 16,
+      "type": "timeseries",
+      "title": "Active vs long-running",
+      "description": "",
+      "datasource": {
+        "type": "grafana-azureprometheus-datasource",
+        "uid": "docdb-amw"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "docdb_currentop_active{cluster=~\"$cluster\"}",
+          "legendFormat": "active {{cluster}}",
+          "instant": false
+        },
+        {
+          "refId": "B",
+          "expr": "docdb_currentop_long_running{cluster=~\"$cluster\"}",
+          "legendFormat": "long-running {{cluster}}",
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 31
+      }
+    },
+    {
+      "id": 17,
+      "type": "timeseries",
+      "title": "Longest running op (s)",
+      "description": "",
+      "datasource": {
+        "type": "grafana-azureprometheus-datasource",
+        "uid": "docdb-amw"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "docdb_currentop_max_secs_running{cluster=~\"$cluster\"}",
+          "legendFormat": "{{cluster}}",
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 31
+      }
+    },
+    {
+      "id": 18,
+      "type": "timeseries",
+      "title": "Active ops by type",
+      "description": "",
+      "datasource": {
+        "type": "grafana-azureprometheus-datasource",
+        "uid": "docdb-amw"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "docdb_currentop_by_type{cluster=~\"$cluster\"}",
+          "legendFormat": "{{cluster}} {{op}}",
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 15,
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 39
+      }
+    },
+    {
+      "id": 19,
+      "type": "timeseries",
+      "title": "Active ops by namespace (top 10)",
+      "description": "",
+      "datasource": {
+        "type": "grafana-azureprometheus-datasource",
+        "uid": "docdb-amw"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "docdb_currentop_by_namespace{cluster=~\"$cluster\"}",
+          "legendFormat": "{{cluster}} {{ns}}",
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 15,
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 39
+      }
+    },
+    {
+      "id": 20,
+      "type": "row",
+      "title": "Storage (databases & collections)",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 47
+      }
+    },
+    {
+      "id": 21,
+      "type": "timeseries",
+      "title": "Database size (data / storage / index)",
+      "description": "",
+      "datasource": {
+        "type": "grafana-azureprometheus-datasource",
+        "uid": "docdb-amw"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "docdb_db_data_size_bytes{cluster=~\"$cluster\"}",
+          "legendFormat": "data {{cluster}} {{db}}",
+          "instant": false
+        },
+        {
+          "refId": "B",
+          "expr": "docdb_db_storage_size_bytes{cluster=~\"$cluster\"}",
+          "legendFormat": "storage {{cluster}} {{db}}",
+          "instant": false
+        },
+        {
+          "refId": "C",
+          "expr": "docdb_db_index_size_bytes{cluster=~\"$cluster\"}",
+          "legendFormat": "index {{cluster}} {{db}}",
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 48
+      }
+    },
+    {
+      "id": 22,
+      "type": "timeseries",
+      "title": "Database objects / collections",
+      "description": "",
+      "datasource": {
+        "type": "grafana-azureprometheus-datasource",
+        "uid": "docdb-amw"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "docdb_db_objects{cluster=~\"$cluster\"}",
+          "legendFormat": "objects {{cluster}} {{db}}",
+          "instant": false
+        },
+        {
+          "refId": "B",
+          "expr": "docdb_db_collections{cluster=~\"$cluster\"}",
+          "legendFormat": "collections {{cluster}} {{db}}",
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 48
+      }
+    },
+    {
+      "id": 23,
+      "type": "timeseries",
+      "title": "Collection data size (top 10)",
+      "description": "",
+      "datasource": {
+        "type": "grafana-azureprometheus-datasource",
+        "uid": "docdb-amw"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "topk(10, docdb_collection_size_bytes{cluster=~\"$cluster\"})",
+          "legendFormat": "{{cluster}} {{db}}.{{collection}}",
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 56
+      }
+    },
+    {
+      "id": 24,
+      "type": "timeseries",
+      "title": "Collection documents (top 10)",
+      "description": "",
+      "datasource": {
+        "type": "grafana-azureprometheus-datasource",
+        "uid": "docdb-amw"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "topk(10, docdb_collection_documents{cluster=~\"$cluster\"})",
+          "legendFormat": "{{cluster}} {{db}}.{{collection}}",
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 56
+      }
+    },
+    {
+      "id": 25,
+      "type": "timeseries",
+      "title": "Collection storage size (top 10)",
+      "description": "",
+      "datasource": {
+        "type": "grafana-azureprometheus-datasource",
+        "uid": "docdb-amw"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "topk(10, docdb_collection_storage_size_bytes{cluster=~\"$cluster\"})",
+          "legendFormat": "{{cluster}} {{db}}.{{collection}}",
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 64
+      }
+    },
+    {
+      "id": 26,
+      "type": "timeseries",
+      "title": "Collection index size (top 10)",
+      "description": "",
+      "datasource": {
+        "type": "grafana-azureprometheus-datasource",
+        "uid": "docdb-amw"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "topk(10, docdb_collection_index_size_bytes{cluster=~\"$cluster\"})",
+          "legendFormat": "{{cluster}} {{db}}.{{collection}}",
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 64
+      }
+    },
+    {
+      "id": 27,
+      "type": "timeseries",
+      "title": "Average object size (top 10)",
+      "description": "",
+      "datasource": {
+        "type": "grafana-azureprometheus-datasource",
+        "uid": "docdb-amw"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "topk(10, docdb_collection_avg_object_size_bytes{cluster=~\"$cluster\"})",
+          "legendFormat": "{{cluster}} {{db}}.{{collection}}",
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 72
+      }
+    },
+    {
+      "id": 28,
+      "type": "timeseries",
+      "title": "Index count (top 10)",
+      "description": "",
+      "datasource": {
+        "type": "grafana-azureprometheus-datasource",
+        "uid": "docdb-amw"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "topk(10, docdb_collection_indexes{cluster=~\"$cluster\"})",
+          "legendFormat": "{{cluster}} {{db}}.{{collection}}",
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 72
+      }
+    },
+    {
+      "type": "row",
+      "title": "Shard skew - per node/ServerName (Azure Monitor)",
+      "collapsed": false,
+      "panels": [],
+      "id": 29,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 80
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Requests by server/shard (count)",
+      "datasource": "Azure Monitor",
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "Azure Monitor",
+          "subscription": "<SUBSCRIPTION_ID>",
+          "azureMonitor": {
+            "aggregation": "Count",
+            "metricName": "MongoRequestDurationMs",
+            "metricNamespace": "microsoft.documentdb/mongoclusters",
+            "timeGrain": "auto",
+            "region": "<AZURE_REGION>",
+            "alias": "{{ dimensionvalue }}",
+            "dimensionFilters": [
+              {
+                "dimension": "ServerName",
+                "operator": "eq",
+                "filters": [
+                  "*"
+                ]
+              }
+            ],
+            "resources": [
+              {
+                "subscription": "<SUBSCRIPTION_ID>",
+                "resourceGroup": "<CLUSTER_RESOURCE_GROUP>",
+                "resourceName": "<CLUSTER_NAME>",
+                "metricNamespace": "Microsoft.DocumentDB/mongoClusters",
+                "region": "<AZURE_REGION>"
+              }
+            ]
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": true
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "id": 39,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 81
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Latency by server/shard - avg (ms)",
+      "datasource": "Azure Monitor",
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "Azure Monitor",
+          "subscription": "<SUBSCRIPTION_ID>",
+          "azureMonitor": {
+            "aggregation": "Average",
+            "metricName": "MongoRequestDurationMs",
+            "metricNamespace": "microsoft.documentdb/mongoclusters",
+            "timeGrain": "auto",
+            "region": "<AZURE_REGION>",
+            "alias": "{{ dimensionvalue }}",
+            "dimensionFilters": [
+              {
+                "dimension": "ServerName",
+                "operator": "eq",
+                "filters": [
+                  "*"
+                ]
+              }
+            ],
+            "resources": [
+              {
+                "subscription": "<SUBSCRIPTION_ID>",
+                "resourceGroup": "<CLUSTER_RESOURCE_GROUP>",
+                "resourceName": "<CLUSTER_NAME>",
+                "metricNamespace": "Microsoft.DocumentDB/mongoClusters",
+                "region": "<AZURE_REGION>"
+              }
+            ]
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": true
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "id": 40,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 81
+      }
+    },
+    {
+      "id": 41,
+      "type": "row",
+      "title": "Azure Monitor - platform metrics (<CLUSTER_NAME>)",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 89
+      }
+    },
+    {
+      "id": 42,
+      "type": "timeseries",
+      "title": "CPU %",
+      "datasource": "Azure Monitor",
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "Azure Monitor",
+          "subscription": "<SUBSCRIPTION_ID>",
+          "azureMonitor": {
+            "aggregation": "Average",
+            "metricName": "CpuPercent",
+            "metricNamespace": "microsoft.documentdb/mongoclusters",
+            "timeGrain": "auto",
+            "region": "<AZURE_REGION>",
+            "alias": "ave {{ dimensionvalue }}",
+            "dimensionFilters": [
+              {
+                "dimension": "ServerName",
+                "operator": "eq",
+                "filters": [
+                  "*"
+                ]
+              }
+            ],
+            "resources": [
+              {
+                "subscription": "<SUBSCRIPTION_ID>",
+                "resourceGroup": "<CLUSTER_RESOURCE_GROUP>",
+                "resourceName": "<CLUSTER_NAME>",
+                "metricNamespace": "Microsoft.DocumentDB/mongoClusters",
+                "region": "<AZURE_REGION>"
+              }
+            ]
+          }
+        },
+        {
+          "refId": "B",
+          "queryType": "Azure Monitor",
+          "subscription": "<SUBSCRIPTION_ID>",
+          "azureMonitor": {
+            "aggregation": "Maximum",
+            "metricName": "CpuPercent",
+            "metricNamespace": "microsoft.documentdb/mongoclusters",
+            "timeGrain": "auto",
+            "region": "<AZURE_REGION>",
+            "alias": "max {{ dimensionvalue }}",
+            "dimensionFilters": [
+              {
+                "dimension": "ServerName",
+                "operator": "eq",
+                "filters": [
+                  "*"
+                ]
+              }
+            ],
+            "resources": [
+              {
+                "subscription": "<SUBSCRIPTION_ID>",
+                "resourceGroup": "<CLUSTER_RESOURCE_GROUP>",
+                "resourceName": "<CLUSTER_NAME>",
+                "metricNamespace": "Microsoft.DocumentDB/mongoClusters",
+                "region": "<AZURE_REGION>"
+              }
+            ]
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "max": 100
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 90
+      }
+    },
+    {
+      "id": 43,
+      "type": "timeseries",
+      "title": "Memory %",
+      "datasource": "Azure Monitor",
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "Azure Monitor",
+          "subscription": "<SUBSCRIPTION_ID>",
+          "azureMonitor": {
+            "aggregation": "Average",
+            "metricName": "MemoryPercent",
+            "metricNamespace": "microsoft.documentdb/mongoclusters",
+            "timeGrain": "auto",
+            "region": "<AZURE_REGION>",
+            "alias": "ave {{ dimensionvalue }}",
+            "dimensionFilters": [
+              {
+                "dimension": "ServerName",
+                "operator": "eq",
+                "filters": [
+                  "*"
+                ]
+              }
+            ],
+            "resources": [
+              {
+                "subscription": "<SUBSCRIPTION_ID>",
+                "resourceGroup": "<CLUSTER_RESOURCE_GROUP>",
+                "resourceName": "<CLUSTER_NAME>",
+                "metricNamespace": "Microsoft.DocumentDB/mongoClusters",
+                "region": "<AZURE_REGION>"
+              }
+            ]
+          }
+        },
+        {
+          "refId": "B",
+          "queryType": "Azure Monitor",
+          "subscription": "<SUBSCRIPTION_ID>",
+          "azureMonitor": {
+            "aggregation": "Maximum",
+            "metricName": "MemoryPercent",
+            "metricNamespace": "microsoft.documentdb/mongoclusters",
+            "timeGrain": "auto",
+            "region": "<AZURE_REGION>",
+            "alias": "max {{ dimensionvalue }}",
+            "dimensionFilters": [
+              {
+                "dimension": "ServerName",
+                "operator": "eq",
+                "filters": [
+                  "*"
+                ]
+              }
+            ],
+            "resources": [
+              {
+                "subscription": "<SUBSCRIPTION_ID>",
+                "resourceGroup": "<CLUSTER_RESOURCE_GROUP>",
+                "resourceName": "<CLUSTER_NAME>",
+                "metricNamespace": "Microsoft.DocumentDB/mongoClusters",
+                "region": "<AZURE_REGION>"
+              }
+            ]
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "max": 100
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 90
+      }
+    },
+    {
+      "id": 44,
+      "type": "timeseries",
+      "title": "Committed memory %",
+      "datasource": "Azure Monitor",
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "Azure Monitor",
+          "subscription": "<SUBSCRIPTION_ID>",
+          "azureMonitor": {
+            "aggregation": "Average",
+            "metricName": "CommittedMemoryPercent",
+            "metricNamespace": "microsoft.documentdb/mongoclusters",
+            "timeGrain": "auto",
+            "region": "<AZURE_REGION>",
+            "alias": "ave {{ dimensionvalue }}",
+            "dimensionFilters": [
+              {
+                "dimension": "ServerName",
+                "operator": "eq",
+                "filters": [
+                  "*"
+                ]
+              }
+            ],
+            "resources": [
+              {
+                "subscription": "<SUBSCRIPTION_ID>",
+                "resourceGroup": "<CLUSTER_RESOURCE_GROUP>",
+                "resourceName": "<CLUSTER_NAME>",
+                "metricNamespace": "Microsoft.DocumentDB/mongoClusters",
+                "region": "<AZURE_REGION>"
+              }
+            ]
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": true
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 98
+      }
+    },
+    {
+      "id": 45,
+      "type": "timeseries",
+      "title": "IOPS",
+      "datasource": "Azure Monitor",
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "Azure Monitor",
+          "subscription": "<SUBSCRIPTION_ID>",
+          "azureMonitor": {
+            "aggregation": "Average",
+            "metricName": "IOPS",
+            "metricNamespace": "microsoft.documentdb/mongoclusters",
+            "timeGrain": "auto",
+            "region": "<AZURE_REGION>",
+            "alias": "ave {{ dimensionvalue }}",
+            "dimensionFilters": [
+              {
+                "dimension": "ServerName",
+                "operator": "eq",
+                "filters": [
+                  "*"
+                ]
+              }
+            ],
+            "resources": [
+              {
+                "subscription": "<SUBSCRIPTION_ID>",
+                "resourceGroup": "<CLUSTER_RESOURCE_GROUP>",
+                "resourceName": "<CLUSTER_NAME>",
+                "metricNamespace": "Microsoft.DocumentDB/mongoClusters",
+                "region": "<AZURE_REGION>"
+              }
+            ]
+          }
+        },
+        {
+          "refId": "B",
+          "queryType": "Azure Monitor",
+          "subscription": "<SUBSCRIPTION_ID>",
+          "azureMonitor": {
+            "aggregation": "Maximum",
+            "metricName": "IOPS",
+            "metricNamespace": "microsoft.documentdb/mongoclusters",
+            "timeGrain": "auto",
+            "region": "<AZURE_REGION>",
+            "alias": "max {{ dimensionvalue }}",
+            "dimensionFilters": [
+              {
+                "dimension": "ServerName",
+                "operator": "eq",
+                "filters": [
+                  "*"
+                ]
+              }
+            ],
+            "resources": [
+              {
+                "subscription": "<SUBSCRIPTION_ID>",
+                "resourceGroup": "<CLUSTER_RESOURCE_GROUP>",
+                "resourceName": "<CLUSTER_NAME>",
+                "metricNamespace": "Microsoft.DocumentDB/mongoClusters",
+                "region": "<AZURE_REGION>"
+              }
+            ]
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "iops",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": true
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 98
+      }
+    },
+    {
+      "id": 46,
+      "type": "timeseries",
+      "title": "Network ingress",
+      "datasource": "Azure Monitor",
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "Azure Monitor",
+          "subscription": "<SUBSCRIPTION_ID>",
+          "azureMonitor": {
+            "aggregation": "Average",
+            "metricName": "NetworkBytesIngress",
+            "metricNamespace": "microsoft.documentdb/mongoclusters",
+            "timeGrain": "auto",
+            "region": "<AZURE_REGION>",
+            "alias": "ave {{ dimensionvalue }}",
+            "dimensionFilters": [
+              {
+                "dimension": "ServerName",
+                "operator": "eq",
+                "filters": [
+                  "*"
+                ]
+              }
+            ],
+            "resources": [
+              {
+                "subscription": "<SUBSCRIPTION_ID>",
+                "resourceGroup": "<CLUSTER_RESOURCE_GROUP>",
+                "resourceName": "<CLUSTER_NAME>",
+                "metricNamespace": "Microsoft.DocumentDB/mongoClusters",
+                "region": "<AZURE_REGION>"
+              }
+            ]
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": true
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 106
+      }
+    },
+    {
+      "id": 47,
+      "type": "timeseries",
+      "title": "Network egress",
+      "datasource": "Azure Monitor",
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "Azure Monitor",
+          "subscription": "<SUBSCRIPTION_ID>",
+          "azureMonitor": {
+            "aggregation": "Average",
+            "metricName": "NetworkBytesEgress",
+            "metricNamespace": "microsoft.documentdb/mongoclusters",
+            "timeGrain": "auto",
+            "region": "<AZURE_REGION>",
+            "alias": "ave {{ dimensionvalue }}",
+            "dimensionFilters": [
+              {
+                "dimension": "ServerName",
+                "operator": "eq",
+                "filters": [
+                  "*"
+                ]
+              }
+            ],
+            "resources": [
+              {
+                "subscription": "<SUBSCRIPTION_ID>",
+                "resourceGroup": "<CLUSTER_RESOURCE_GROUP>",
+                "resourceName": "<CLUSTER_NAME>",
+                "metricNamespace": "Microsoft.DocumentDB/mongoClusters",
+                "region": "<AZURE_REGION>"
+              }
+            ]
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": true
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 106
+      }
+    },
+    {
+      "id": 48,
+      "type": "timeseries",
+      "title": "Storage %",
+      "datasource": "Azure Monitor",
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "Azure Monitor",
+          "subscription": "<SUBSCRIPTION_ID>",
+          "azureMonitor": {
+            "aggregation": "Average",
+            "metricName": "StoragePercent",
+            "metricNamespace": "microsoft.documentdb/mongoclusters",
+            "timeGrain": "auto",
+            "region": "<AZURE_REGION>",
+            "alias": "ave {{ dimensionvalue }}",
+            "dimensionFilters": [
+              {
+                "dimension": "ServerName",
+                "operator": "eq",
+                "filters": [
+                  "*"
+                ]
+              }
+            ],
+            "resources": [
+              {
+                "subscription": "<SUBSCRIPTION_ID>",
+                "resourceGroup": "<CLUSTER_RESOURCE_GROUP>",
+                "resourceName": "<CLUSTER_NAME>",
+                "metricNamespace": "Microsoft.DocumentDB/mongoClusters",
+                "region": "<AZURE_REGION>"
+              }
+            ]
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "max": 100
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 114
+      }
+    },
+    {
+      "id": 49,
+      "type": "timeseries",
+      "title": "Storage used",
+      "datasource": "Azure Monitor",
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "Azure Monitor",
+          "subscription": "<SUBSCRIPTION_ID>",
+          "azureMonitor": {
+            "aggregation": "Average",
+            "metricName": "StorageUsed",
+            "metricNamespace": "microsoft.documentdb/mongoclusters",
+            "timeGrain": "auto",
+            "region": "<AZURE_REGION>",
+            "alias": "ave {{ dimensionvalue }}",
+            "dimensionFilters": [
+              {
+                "dimension": "ServerName",
+                "operator": "eq",
+                "filters": [
+                  "*"
+                ]
+              }
+            ],
+            "resources": [
+              {
+                "subscription": "<SUBSCRIPTION_ID>",
+                "resourceGroup": "<CLUSTER_RESOURCE_GROUP>",
+                "resourceName": "<CLUSTER_NAME>",
+                "metricNamespace": "Microsoft.DocumentDB/mongoClusters",
+                "region": "<AZURE_REGION>"
+              }
+            ]
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": true
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 114
+      }
+    },
+    {
+      "id": 50,
+      "type": "timeseries",
+      "title": "Request duration by operation (ms)",
+      "datasource": "Azure Monitor",
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "Azure Monitor",
+          "subscription": "<SUBSCRIPTION_ID>",
+          "azureMonitor": {
+            "aggregation": "Average",
+            "metricName": "MongoRequestDurationMs",
+            "metricNamespace": "microsoft.documentdb/mongoclusters",
+            "timeGrain": "auto",
+            "region": "<AZURE_REGION>",
+            "alias": "ave {{ dimensionvalue }}",
+            "dimensionFilters": [
+              {
+                "dimension": "Operation",
+                "operator": "eq",
+                "filters": [
+                  "*"
+                ]
+              }
+            ],
+            "resources": [
+              {
+                "subscription": "<SUBSCRIPTION_ID>",
+                "resourceGroup": "<CLUSTER_RESOURCE_GROUP>",
+                "resourceName": "<CLUSTER_NAME>",
+                "metricNamespace": "Microsoft.DocumentDB/mongoClusters",
+                "region": "<AZURE_REGION>"
+              }
+            ]
+          }
+        },
+        {
+          "refId": "B",
+          "queryType": "Azure Monitor",
+          "subscription": "<SUBSCRIPTION_ID>",
+          "azureMonitor": {
+            "aggregation": "Maximum",
+            "metricName": "MongoRequestDurationMs",
+            "metricNamespace": "microsoft.documentdb/mongoclusters",
+            "timeGrain": "auto",
+            "region": "<AZURE_REGION>",
+            "alias": "max {{ dimensionvalue }}",
+            "dimensionFilters": [
+              {
+                "dimension": "Operation",
+                "operator": "eq",
+                "filters": [
+                  "*"
+                ]
+              }
+            ],
+            "resources": [
+              {
+                "subscription": "<SUBSCRIPTION_ID>",
+                "resourceGroup": "<CLUSTER_RESOURCE_GROUP>",
+                "resourceName": "<CLUSTER_NAME>",
+                "metricNamespace": "Microsoft.DocumentDB/mongoClusters",
+                "region": "<AZURE_REGION>"
+              }
+            ]
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": true
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 122
+      }
+    },
+    {
+      "id": 51,
+      "type": "timeseries",
+      "title": "Autoscale utilization %",
+      "datasource": "Azure Monitor",
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "Azure Monitor",
+          "subscription": "<SUBSCRIPTION_ID>",
+          "azureMonitor": {
+            "aggregation": "Average",
+            "metricName": "AutoscaleUtilizationPercent",
+            "metricNamespace": "microsoft.documentdb/mongoclusters",
+            "timeGrain": "auto",
+            "region": "<AZURE_REGION>",
+            "alias": "ave {{ dimensionvalue }}",
+            "dimensionFilters": [],
+            "resources": [
+              {
+                "subscription": "<SUBSCRIPTION_ID>",
+                "resourceGroup": "<CLUSTER_RESOURCE_GROUP>",
+                "resourceName": "<CLUSTER_NAME>",
+                "metricNamespace": "Microsoft.DocumentDB/mongoClusters",
+                "region": "<AZURE_REGION>"
+              }
+            ]
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "max": 100
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 122
+      }
+    },
+    {
+      "id": 52,
+      "type": "row",
+      "title": "Monitor health",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 130
+      }
+    },
+    {
+      "id": 53,
+      "type": "timeseries",
+      "title": "Admin command success",
+      "description": "1 = command succeeded; 0 = unsupported/forbidden on this engine",
+      "datasource": {
+        "type": "grafana-azureprometheus-datasource",
+        "uid": "docdb-amw"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "docdb_command_success{cluster=~\"$cluster\"}",
+          "legendFormat": "{{cluster}} {{command}}",
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 131
+      }
+    },
+    {
+      "id": 54,
+      "type": "timeseries",
+      "title": "Scrape duration",
+      "description": "",
+      "datasource": {
+        "type": "grafana-azureprometheus-datasource",
+        "uid": "docdb-amw"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "docdb_scrape_duration_seconds{cluster=~\"$cluster\"}",
+          "legendFormat": "{{cluster}}",
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "min": 0,
+          "custom": {
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 131
+      }
+    }
+  ]
+}

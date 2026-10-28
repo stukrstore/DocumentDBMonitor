@@ -1,0 +1,10 @@
+{
+  "subscription_id": "<subscription-uuid>",
+  "resource_group_name": "<existing-amw-resource-group>",
+  "location": "<amw-azure-region>",
+  "amw_name": "<exact-existing-or-new-amw-name>",
+  "use_caf_name": false,
+  "collector_principal_id": "<collector-managed-identity-object-uuid>",
+  "grafana_principal_id": "<grafana-managed-identity-object-uuid>",
+  "documentdb_resource_group_id": "/subscriptions/<subscription-uuid>/resourceGroups/<documentdb-resource-group>"
+}
