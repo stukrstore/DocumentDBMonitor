@@ -155,7 +155,6 @@ AMW는 자체적으로 DocumentDB에 접속해 내부 지표를 수집하지 않
 
 | 태그 | 값 | 의미 |
 | --- | --- | --- |
-| `app` | `docdb-monitor` | 수집 대상 식별 |
 | `host` | `<doc-db-hostname>` | 대상 호스트 |
 | `interval` | `5s`, `10s`, `15s`, `30s`, `1m`, `2m`, `5m` | Prometheus 수집 주기 |
 | `enabled` | `true` / `false` | 수집 사용 여부 |
