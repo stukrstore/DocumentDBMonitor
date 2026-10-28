@@ -192,7 +192,53 @@ az keyvault secret set-attributes --vault-name '<key-vault-name>' --name 'docdb-
 
 `ServerName`별 요청과 지연은 **부하 불균형의 간접 지표**이며 샤드별 데이터 크기 불균형을 확정하지 않습니다.
 
-### 4-2. JSON 내보내기 및 가져오기
+### 4-2. 섹션별 대시보드 화면
+
+다음 이미지는 2026년 10월 28일 실제 대시보드의 최근 1시간을 캡처한 예시입니다. 수치는 캡처 시점의 값이며 실시간으로 갱신되지 않습니다.
+
+#### Overview
+
+연결 상태, 활성·장기 작업, 스크랩 시간 및 데이터 크기를 요약합니다.
+
+![Overview 대시보드](docs/screenshots/overview.png)
+
+#### Operations & latency
+
+작업·상태·컬렉션별 요청과 지연을 확인합니다. 패널의 단위 및 집계 설정은 사용 환경에서 확인하세요.
+
+![Operations and latency 대시보드](docs/screenshots/operations-latency.png)
+
+#### Active operations
+
+활성 작업과 장기 실행 작업을 유형 및 네임스페이스별로 확인합니다.
+
+![Active operations 대시보드](docs/screenshots/active-operations.png)
+
+#### Storage
+
+데이터베이스 및 컬렉션의 크기, 문서 수와 인덱스 정보를 확인합니다.
+
+![Storage 대시보드](docs/screenshots/storage.png)
+
+#### Shard skew
+
+서버별 요청과 지연을 통한 부하 편차를 보여줍니다. 이 화면만으로 샤드별 데이터 용량 편차를 확정할 수 없습니다.
+
+![Shard skew 대시보드](docs/screenshots/shard-skew.png)
+
+#### Azure Monitor platform metrics
+
+CPU, 메모리, IOPS, 네트워크, 스토리지와 요청 지연을 확인합니다.
+
+![Azure Monitor platform metrics 대시보드](docs/screenshots/platform-metrics.png)
+
+#### Monitor health
+
+관리 명령 성공 여부와 스크랩 시간을 확인합니다.
+
+![Monitor health 대시보드](docs/screenshots/monitor-health.png)
+
+### 4-3. JSON 내보내기 및 가져오기
 
 [Grafana 대시보드 템플릿](grafana/docdb-monitor-dashboard.json)은 `<SUBSCRIPTION_ID>`, `<CLUSTER_RESOURCE_GROUP>`, `<CLUSTER_NAME>`, `<AZURE_REGION>`을 사용합니다. 가져오기 전 별도 사본에서 값을 교체하고 데이터 소스 이름과 UID를 확인합니다. Azure Monitor 데이터 소스는 미리 구성해야 합니다.
 
@@ -209,7 +255,7 @@ az grafana dashboard show -g '<grafana-resource-group>' -n '<grafana-name>' `
   --dashboard docdb-monitor --query dashboard -o json > '<private-export-path>'
 ```
 
-### 4-3. Azure CLI 배포 예시
+### 4-4. Azure CLI 배포 예시
 
 [Grafana 배포 스크립트](grafana/deploy-grafana.ps1)는 데이터 소스와 대시보드를 생성 또는 갱신합니다. 기존 UID와 충돌하면 덮어쓸 수 있으므로 먼저 확인하세요.
 
