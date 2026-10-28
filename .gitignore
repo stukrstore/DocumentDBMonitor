@@ -1,4 +1,5 @@
 # Local connection strings and generated deployment files
+app/
 app/data/
 data/
 .deploy/
